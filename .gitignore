@@ -1,4 +1,6 @@
 rocket_raccoon_log
-venv/*
-.idea/*
-__pycache__/*
+venv/
+.idea/
+__pycache__/
+*.log
+settings.py
