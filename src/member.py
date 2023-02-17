@@ -186,6 +186,7 @@ class Member(MqttClient):
             payload["customer_text"] = customer_text
 
         # 将发送给mqtt服务的消息做备份
+        # print(payload)
         self.logger.info("payload: %s" % json.dumps(payload))
 
         # 连接服务器，发送请求

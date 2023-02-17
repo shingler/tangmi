@@ -5,6 +5,7 @@ from flask import Blueprint, current_app, request
 
 from src.error_code import from_api, from_device
 from src.member import Member
+from src.utility import imageUrl2Base64
 
 blueprint = Blueprint("member", __name__, url_prefix="/member")
 
@@ -14,8 +15,7 @@ blueprint = Blueprint("member", __name__, url_prefix="/member")
 # @param string person_id 必填，人员ID（不超过19字节），建议将系统的人员id直接传过来保持一致
 # @param string phone 必填，人员手机号
 # @param string display_name 显示在刷脸成功后终端上的名字
-# @param int kind 人员分类，取值范围0-15。默认是0，可在设备pc段进行自定义。
-# @param string reg_image 必填，注册图像(base64)，注：以元数据开始，不要加文件描述
+# @param string reg_image 必填，图像url
 # @param string term_start 有效期开始时间，不填则会存为useless，即不使用该字段
 # @param string term_end 有效期结束时间，不填则会存为forever，即永久有效
 @blueprint.route("/add", methods=["POST"])
@@ -24,7 +24,6 @@ def add():
     phone = request.form.get("phone", "")
     display_name = request.form.get("display_name", "")
     person_id = request.form.get("person_id", "")
-    kind = int(request.form.get("kind", 0))
     reg_image = request.form.get("reg_image", "")
     term_start = request.form.get("term_start", "useless")
     term_end = request.form.get("term_end", "forever")
@@ -41,17 +40,20 @@ def add():
         return {"status": 10003, "message": from_api[10003]}
     if len(person_id) == 0:
         return {"status": 10005, "message": from_api[10005]}
-    # 检查人像
+    # 检查人像不为空
     if len(reg_image) == 0:
         return {"status": 10004, "message": from_api[10004]}
+    # 人像url解码
+    reg_image_bstring = imageUrl2Base64(reg_image, origin_output=False)
+    if not reg_image_bstring:
+        return {"status": 30003, "message": from_api[30003]}
+    reg_image_bstring = bytes.decode(reg_image_bstring)
+
     # 有效期范围检查
     if len(term_start) > 0 and len(term_end) > 0 and term_start != "useless" and term_end not in ["never", "forever"] \
             and datetime.timestamp(datetime.strptime(term_start, "%Y-%m-%d %H:%M:%S")) > datetime.timestamp(
         datetime.strptime(term_end, "%Y-%m-%d %H:%M:%S")):
         return {"status": 30005, "message": from_api[30005]}
-    # kind检查
-    if kind not in list(range(0, 16)):
-        return {"status": 30006, "message": from_api[30006]}
 
     # 重复注册检查
     client = Member(current_app.config["MQTT_ADDR"], current_app.config["MQTT_PORT"], device_no=device_no)
@@ -70,7 +72,7 @@ def add():
         return {"status": 30002, "message": from_api[30002]}
 
     # 执行注册
-    request_id = client.add(person_id, phone, reg_image, kind=kind,
+    request_id = client.add(person_id, phone, reg_image_bstring, kind=0,
                             term_start=term_start, term_end=term_end, customer_text=display_name, timeout=30)
     ret = client.get(request_id)
     if ret is not None:
@@ -133,7 +135,6 @@ def delete():
 # @param string person_id 必填，人员ID（不超过19字节），建议将系统的人员id直接传过来保持一致
 # @param string phone 人员手机号
 # @param string display_name 显示在刷脸成功后终端上的名字
-# @param int kind 人员分类，取值范围0-15。默认是0，可在设备pc段进行自定义。
 # @param string reg_image 注册图像(base64)，注：以元数据开始，不要加文件描述
 # @param string term_start 有效期开始时间，不填则会存为useless，即不使用该字段
 # @param string term_end 有效期结束时间，不填则会存为forever，即永久有效
@@ -143,7 +144,6 @@ def modify():
     phone = request.form.get("phone", "")
     display_name = request.form.get("display_name", "")
     person_id = request.form.get("person_id", "")
-    kind = int(request.form.get("kind", 0))
     reg_image = request.form.get("reg_image", "")
     term_start = request.form.get("term_start", "")
     term_end = request.form.get("term_end", "")
@@ -164,9 +164,6 @@ def modify():
             and datetime.timestamp(datetime.strptime(term_start, "%Y-%m-%d %H:%M:%S")) > datetime.timestamp(
         datetime.strptime(term_end, "%Y-%m-%d %H:%M:%S")):
         return {"status": 30005, "message": from_api[30005]}
-    # kind检查
-    if kind not in list(range(0, 16)):
-        return {"status": 30006, "message": from_api[30006]}
 
     client = Member(current_app.config["MQTT_ADDR"], current_app.config["MQTT_PORT"], device_no=device_no)
 
@@ -186,7 +183,7 @@ def modify():
             return {"status": 30002, "message": from_api[30002]}
 
     # 执行修改
-    request_id = client.modify(person_id, phone, reg_image, kind=kind,
+    request_id = client.modify(person_id, phone, reg_image, kind=0,
                                term_start=term_start, term_end=term_end, customer_text=display_name, timeout=30)
     ret = client.get(request_id)
     if ret is not None:

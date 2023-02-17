@@ -4,3 +4,4 @@ venv/
 __pycache__/
 *.log
 settings.py
+rocket_raccoon_log.*
