@@ -5,3 +5,4 @@ __pycache__/
 *.log
 settings.py
 rocket_raccoon_log.*
+env.ini
