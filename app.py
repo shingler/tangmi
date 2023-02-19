@@ -16,4 +16,5 @@ def default():
     return Response("It Works!")
 
 
-app.run(host="0.0.0.0", debug=app.config["DEBUG"])
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", debug=app.config["DEBUG"])
