@@ -20,7 +20,7 @@ class Base:
     # JSON中文
     JSON_AS_ASCII = False
     JSONIFY_MIMETYPE = "application/json;charset=utf-8"
-    # 接口服务器地址
+    # 接口服务器地址(仅测试用例使用)
     API_ADDR = ""
 
 

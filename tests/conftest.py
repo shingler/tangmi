@@ -17,12 +17,13 @@ def init_app():
     return app
 
 
-# 先确定服务有没有开
+# 先确定http服务是否正常
 @pytest.fixture(scope="session")
 def test_server_is_run(init_app):
-    url = "http://127.0.0.1:5000"
+    url = init_app.config["API_ADDR"]
     try:
         res = requests.get(url)
         assert res.status_code == 200
+        assert res.content == "It Works!"
     except Exception:
         pytest.exit("目标服务未开启", returncode=1)
