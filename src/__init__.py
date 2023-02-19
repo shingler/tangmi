@@ -12,7 +12,7 @@ import log
 def create_app():
     app = Flask(__name__)
     # 根据环境读取不同变量
-    env_file = os.path.join(os.getcwd(), "..", "..", "env.ini")
+    env_file = os.path.join(os.getcwd(), "env.ini")
     # print(env_file)
     if not os.path.exists(env_file):
         sys.exit("环境文件不存在")
