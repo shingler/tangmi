@@ -27,7 +27,8 @@ class Device(MqttClient):
         request_id = self.request_id({"action": "device_status"})
         self.save(request_id, None)
 
-        # 发送消息
+        # 连接服务器，发送请求
+        self.connect()
         topic = self.DEVICE_STATUS_REQUEST + self.device_no
         payload = self.PAYLOAD["device_status"]
         self.request(topic, payload=json.dumps(payload), qos=0, retain=False)
@@ -44,7 +45,8 @@ class Device(MqttClient):
         request_id = self.request_id({"action": "device_unlock"})
         self.save(request_id, None)
 
-        # 发送消息
+        # 连接服务器，发送请求
+        self.connect()
         topic = self.DEVICE_STATUS_REQUEST + self.device_no
         payload = self.PAYLOAD["device_unlock"]
         self.request(topic, payload=json.dumps(payload), qos=0, retain=False)
