@@ -22,6 +22,8 @@ class Base:
     JSONIFY_MIMETYPE = "application/json;charset=utf-8"
     # 接口服务器地址(仅测试用例使用)
     API_ADDR = ""
+    # 回调地址
+    CALLBACK_URL = ""
 
 
 # 开发环境
@@ -31,6 +33,7 @@ class Development(Base):
     MQTT_PORT = 1883
     DEBUG = True
     API_ADDR = "http://127.0.0.1:5000"
+    CALLBACK_URL = ""
 
 
 # 测试环境

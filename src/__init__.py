@@ -6,7 +6,7 @@ from flask import Flask
 
 import device
 import member
-import log
+import monitor
 
 
 def create_app():
@@ -32,6 +32,6 @@ def create_app():
     # 注册蓝图
     app.register_blueprint(member.blueprint)
     app.register_blueprint(device.blueprint)
-    app.register_blueprint(log.blueprint)
+    # app.register_blueprint(log.blueprint)
 
     return app

@@ -1,3 +1,5 @@
+import copy
+
 import requests
 
 DEVICE_SERIAL_NO = "121EC1-0D1FCB-0000FF"
@@ -23,7 +25,7 @@ def test_unlock(init_app):
     assert res2["status"] == 20001
 
     # 设备在线
-    param3 = param_correct
+    param3 = copy.deepcopy(param_correct)
     res3 = requests.post(url, data=param3)
     assert res3.status_code == 200
     assert res3 is not None
@@ -52,7 +54,7 @@ def test_status(init_app):
     assert res2["status"] == 20001
 
     # 设备在线
-    param3 = param_correct
+    param3 = copy.deepcopy(param_correct)
     res3 = requests.post(url, data=param3)
     assert res3.status_code == 200
     assert res3.status_code == 200
