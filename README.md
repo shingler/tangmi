@@ -1,4 +1,8 @@
 # tangmi
-本项目可用于为无人值守的空间提供开门服务，包括新注册、续费、期限检查、远程开门、人脸识别等功能。硬件方面适配唐米火神3（EV500）人脸门禁设备，基于mqtt协议进行通信，提供了基于flask框架的restful接口。
+This project introduces an innovative rental management system tailored for office building owners, leveraging facial recognition technology within the Internet of Things (IoT) framework. The system streamlines property rental processes, automates customer information management, validates lease periods, sends renewal notifications, and offers secure access control through facial recognition and remote door opening capabilities. It is designed to reduce administrative burden and enhance the management efficiency of properties and contracts.
 
-This project can be used to provide door opening services for unattended spaces, including features such as new registrations, renewals, validity period checks, remote door opening, and facial recognition. On the hardware side, it is compatible with the Tangmi Huoshen 3 (EV500) facial recognition access control device. Communication is based on the MQTT protocol, and it provides RESTful APIs built on the Flask framework.
+Technical Points
+The system is the backend component of an Internet of Things (IoT) project, with IoT devices purchased from a specific brand and model. It communicates with the devices via the MQTT protocol and provides RESTful APIs based on the Flask framework for use by the management backend.
+
+Highlights
+The system employs a Test-Driven Development (TDD) workflow, ensuring thorough communication with the property owners to anticipate various potential unexpected situations. Extensive targeted automated validations have been conducted to ensure that the system does not impact the customer's user experience in real-world applications.
